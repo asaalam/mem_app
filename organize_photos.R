@@ -30,15 +30,12 @@ get_files <- function (input_dir) {
 }
 
 safe_dir_create <- function (input_dir) {
-  # setwd(input_dir)
-  
-  ret <- ""
-  
   if (!dir.exists(input_dir)) {
     ret <- dir.create(input_dir)
+    return (ret)
   }
   
-  return (ret)
+  return (FALSE)
 }
 
 
@@ -261,10 +258,21 @@ process_file_match_4 <- function(input_file, output_dir) {
 # }
 
 
-safe_dir_create(output_dir)
+dir_create_ret <- safe_dir_create(output_dir)
 
 raw_files <- get_files(input_dir)
-print(paste("processing ", length(raw_files), " files", sep = ""))
+print(
+  paste(
+    "processing ",
+    length(raw_files),
+    " files from [",
+    input_dir,
+    "] to [",
+    output_dir,
+    "]",
+    sep = ""
+  )
+)
 
 for (i in 1:length(raw_files)) {
   # print(paste("processing ", raw_files[i], sep = ""))
@@ -292,6 +300,9 @@ for (i in 1:length(raw_files)) {
   if (ret) {
     next
   }
+  
+  print(paste("No pattern match for file [", raw_files[i], "]", sep = ""))
+  
 }
 
 
