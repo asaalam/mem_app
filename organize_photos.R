@@ -305,5 +305,6 @@ for (i in 1:length(raw_files)) {
   
 }
 
+warnings()
 
 print("DONE")
