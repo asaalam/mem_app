@@ -128,19 +128,18 @@ process_file_match_1 <- function(input_file, output_dir) {
   if (is_match > 0) {
     f <- substr(input_file, is_match, nchar(input_file))
     
-    YYYY <- substr(input_file, is_match, is_match + 3)
-    MM <- substr(input_file, is_match + 4, is_match + 5)
-    DD <- substr(input_file, is_match + 6, is_match + 7)
+    date <-
+      as.Date(substr(input_file, is_match, is_match + 7), format = "%Y%m%d")
     
-    # print(paste("          ---> ", YYYY, "/", MM, "/", DD, sep = ""))
+    YYYY <- format(date, "%Y")
+    MM <- format(date, "%b")
     
     safe_dir_create(paste(output_dir, YYYY, sep = "/"))
     safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
-    safe_dir_create(paste(output_dir, YYYY, MM, DD, sep = "/"))
     
     # move file to destination dir
     ret <-
-      safe_move(input_file, paste(output_dir, YYYY, MM, DD, f, sep = "/"))
+      safe_move(input_file, paste(output_dir, YYYY, MM, f, sep = "/"))
     
   }
   
@@ -164,19 +163,18 @@ process_file_match_2 <- function(input_file, output_dir) {
     # print(paste("      ---> match2 ", is_match2, sep = ""))
     
     f <- substr(input_file, is_match2, nchar(input_file))
-    YYYY <- substr(input_file, is_match2 + 4, is_match2 + 7)
-    MM <- substr(input_file, is_match2 + 8, is_match2 + 9)
-    DD <- substr(input_file, is_match2 + 10, is_match2 + 11)
+    date <-
+      as.Date(substr(input_file, is_match2 + 4, is_match2 + 11), format = "%Y%m%d")
     
-    # print(paste("          ---> ", YYYY, "/", MM, "/", DD, sep = ""))
+    YYYY <- format(date, "%Y")
+    MM <- format(date, "%b")
     
     safe_dir_create(paste(output_dir, YYYY, sep = "/"))
     safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
-    safe_dir_create(paste(output_dir, YYYY, MM, DD, sep = "/"))
     
     # move file to destination dir
     ret <-
-      safe_move(input_file, paste(output_dir, YYYY, MM, DD, f, sep = "/"))
+      safe_move(input_file, paste(output_dir, YYYY, MM, f, sep = "/"))
     
   }
   
@@ -199,26 +197,55 @@ process_file_match_3 <- function(input_file, output_dir) {
     
     s <- substr(input_file, is_match, is_match + 11)
     date <- as.Date(s, format = "%d-%b-%Y")
-    # print(paste("DATE is ", date, sep = ""))
     
     YYYY <- format(date, "%Y")
-    MM <- format(date, "%m")
-    DD <- format(date, "%d")
-    
-    # print(paste("          ---> ", YYYY, "/", MM, "/", DD, sep = ""))
+    MM <- format(date, "%b")
     
     safe_dir_create(paste(output_dir, YYYY, sep = "/"))
     safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
-    safe_dir_create(paste(output_dir, YYYY, MM, DD, sep = "/"))
     
     # move file to destination dir
     ret <-
-      safe_move(input_file, paste(output_dir, YYYY, MM, DD, f, sep = "/"))
+      safe_move(input_file, paste(output_dir, YYYY, MM, f, sep = "/"))
     
   }
   
   return (ret)
 }
+
+process_file_match_4 <- function(input_file, output_dir) {
+  # print(paste("processing ", input_file, sep = ""))
+  
+  ret <- FALSE
+  
+  # Example: 20151031153138.m2ts
+  is_match <-
+    regexpr(
+      "(20[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]+)",
+      input_file
+    )
+  # print(paste("      ---> match ", is_match, sep = ""))
+  
+  if (is_match > 0) {
+    f <- substr(input_file, is_match, nchar(input_file))
+    date <-
+      as.Date(substr(input_file, is_match, is_match + 7), format = "%Y%m%d")
+    
+    YYYY <- format(date, "%Y")
+    MM <- format(date, "%b")
+    
+    safe_dir_create(paste(output_dir, YYYY, sep = "/"))
+    safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
+    
+    # move file to destination dir
+    ret <-
+      safe_move(input_file, paste(output_dir, YYYY, MM, f, sep = "/"))
+    
+  }
+  
+  return (ret)
+}
+
 
 # unused function... remove it later
 # no_matches_move_to_unknown <- function(input_file, unknown_dir) {
@@ -236,11 +263,7 @@ process_file_match_3 <- function(input_file, output_dir) {
 
 safe_dir_create(output_dir)
 
-#unknown_dir <- paste(output_dir, "unknown", sep = "/")
-#safe_dir_create(unknown_dir)
-
 raw_files <- get_files(input_dir)
-
 print(paste("processing ", length(raw_files), " files", sep = ""))
 
 for (i in 1:length(raw_files)) {
@@ -264,8 +287,11 @@ for (i in 1:length(raw_files)) {
     next
   }
   
-  # no matches then don't move the file
-  # ret <- no_matches_move_to_unknown(raw_files[i], unknown_dir)
+  ret <- process_file_match_4(raw_files[i], output_dir)
+  
+  if (ret) {
+    next
+  }
 }
 
 
