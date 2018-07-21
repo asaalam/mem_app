@@ -1,6 +1,6 @@
 #!/usr/bin/Rscript
 
-# Rscript organize_photos.R > ./<fill_input_dir>.out
+# Rscript organize_photos.R >> out
 
 # --- Configuration START
 
