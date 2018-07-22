@@ -4,12 +4,12 @@
 
 # --- Configuration START
 
-input_dir <- "/Volumes/Seagate\ Backup\ Plus\ Drive/Memories_DO_NOT_ADD/Unsorted/CompleteBackupSABAandAamir_09272015/Pictures_DONOTADD_BACKEDUP_ON_09272015/"
-# input_dir <- "/Users/asaalam/Desktop/Baseline2/Code2/github/mem_app/input_dir/" # test dir
+# input_dir <- "/Volumes/Seagate\ Backup\ Plus\ Drive/Memories_DO_NOT_ADD/Unsorted/CompleteBackupSABAandAamir_09272015/Pictures_DONOTADD_BACKEDUP_ON_09272015/"
+input_dir <- "/Users/asaalam/Desktop/Baseline2/Code2/github/mem_app/input_dir/" # test dir
 
 # make sure the ending / is not present in the output dir
-output_dir <- "/Volumes/Seagate\ Backup\ Plus\ Drive/memories"
-# output_dir <- "/Users/asaalam/Desktop/Baseline2/Code2/github/mem_app/output_dir" # test dir
+# output_dir <- "/Volumes/Seagate\ Backup\ Plus\ Drive/memories"
+output_dir <- "/Users/asaalam/Desktop/Baseline2/Code2/github/mem_app/output_dir" # test dir
 
 # --- Configuration END
 
@@ -462,6 +462,33 @@ process_file_match_10 <- function(input_file, output_dir) {
   return (ret)
 }
 
+process_file_ctime <- function(input_file, output_dir) {
+  # print(paste("processing ", input_file, sep = ""))
+  
+  ret <- FALSE
+  
+  # Example: use the file creation time to move the file
+  ctime <- file.info(input_file)$ctime
+  # print(paste("      ---> ctime ", ctime, sep = ""))
+
+  # for file name start with end and get until you get first /
+  l <- strsplit(input_file, "/")
+  f <- tail(l[[1]], 1)
+  
+  date <- as.Date(ctime, format = "%m-%d-%Y")
+    
+  YYYY <- format(date, "%Y")
+  MM <- format(date, "%b")
+    
+  safe_dir_create(paste(output_dir, YYYY, sep = "/"))
+  safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
+
+  # move file to destination dir
+  ret <- safe_move(input_file, paste(output_dir, YYYY, MM, f, sep = "/"))
+    
+  return (ret)
+}
+
 # unused function... remove it later
 # no_matches_move_to_unknown <- function(input_file, unknown_dir) {
 #   # move file to unknown_dir
@@ -550,6 +577,12 @@ for (i in 1:length(raw_files)) {
   }
 
   ret <- process_file_match_10(raw_files[i], output_dir)
+  
+  if (ret) {
+    next
+  }
+  
+  ret <- process_file_ctime(raw_files[i], output_dir)
   
   if (ret) {
     next
