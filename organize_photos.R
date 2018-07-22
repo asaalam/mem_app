@@ -60,6 +60,11 @@ safe_move <- function (from, to) {
     return (ret)
   }
   
+  if (substr(from, nchar(from) - 8, nchar(from)) == ".DS_Store") {
+    ret <- file.remove(from)
+    return (ret)
+  }
+  
   is_from_file_movable <- (file.access(from, 2) != -1)
   is_file_exists <- file.exists(to)
   is_file_accessible <- (file.access(to) != -1)
@@ -243,6 +248,149 @@ process_file_match_4 <- function(input_file, output_dir) {
   return (ret)
 }
 
+process_file_match_5 <- function(input_file, output_dir) {
+  # print(paste("processing ", input_file, sep = ""))
+  
+  ret <- FALSE
+  
+  # Example: /mem_app/input_dir/2010_08_05/2010_10_14/IMG_6242.JPG
+  is_match <-
+    regexpr(
+      "(20[0-9][0-9]_[0-9][0-9]_[0-9][0-9]+)",
+      input_file
+    )
+  # print(paste("      ---> match ", is_match, sep = ""))
+  
+  if (is_match > 0) {
+    # for file name start with end and get until you get first /
+    l <- strsplit(input_file, "/")
+    f <- tail(l[[1]], 1)
+
+    date <-
+      as.Date(substr(input_file, is_match, is_match + 9), format = "%Y_%m_%d")
+    
+    YYYY <- format(date, "%Y")
+    MM <- format(date, "%b")
+    
+    safe_dir_create(paste(output_dir, YYYY, sep = "/"))
+    safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
+    
+    # move file to destination dir
+    ret <-
+      safe_move(input_file, paste(output_dir, YYYY, MM, f, sep = "/"))
+    
+  }
+  
+  return (ret)
+}
+
+process_file_match_6 <- function(input_file, output_dir) {
+  # print(paste("processing ", input_file, sep = ""))
+  
+  ret <- FALSE
+  
+  # Example: /mem_app/input_dir/2010-08-05/IMG_6242.JPG
+  is_match <-
+    regexpr(
+      "(20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]+)",
+      input_file
+    )
+  # print(paste("      ---> match ", is_match, sep = ""))
+  
+  if (is_match > 0) {
+    # for file name start with end and get until you get first /
+    l <- strsplit(input_file, "/")
+    f <- tail(l[[1]], 1)
+    
+    date <-
+      as.Date(substr(input_file, is_match, is_match + 9), format = "%Y-%m-%d")
+    
+    YYYY <- format(date, "%Y")
+    MM <- format(date, "%b")
+    
+    safe_dir_create(paste(output_dir, YYYY, sep = "/"))
+    safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
+    
+    # move file to destination dir
+    ret <-
+      safe_move(input_file, paste(output_dir, YYYY, MM, f, sep = "/"))
+    
+  }
+  
+  return (ret)
+}
+
+process_file_match_7 <- function(input_file, output_dir) {
+  # print(paste("processing ", input_file, sep = ""))
+  
+  ret <- FALSE
+  
+  # Example: /mem_app/input_dir/10-18-2014/IMG_6242.JPG
+  is_match <-
+    regexpr(
+      "([0-9][0-9]\\-[0-9][0-9]\\-20[0-9][0-9]+)",
+      input_file
+    )
+  # print(paste("      ---> match ", is_match, sep = ""))
+  
+  if (is_match > 0) {
+    # for file name start with end and get until you get first /
+    l <- strsplit(input_file, "/")
+    f <- tail(l[[1]], 1)
+    
+    date <-
+      as.Date(substr(input_file, is_match, is_match + 9), format = "%m-%d-%Y")
+    
+    YYYY <- format(date, "%Y")
+    MM <- format(date, "%b")
+    
+    safe_dir_create(paste(output_dir, YYYY, sep = "/"))
+    safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
+    
+    # move file to destination dir
+    ret <-
+      safe_move(input_file, paste(output_dir, YYYY, MM, f, sep = "/"))
+    
+  }
+  
+  return (ret)
+}
+
+process_file_match_8 <- function(input_file, output_dir) {
+  # print(paste("processing ", input_file, sep = ""))
+  
+  ret <- FALSE
+  
+  # Example: /mem_app/input_dir/1-1-2014/IMG_6242.JPG
+  is_match <-
+    regexpr(
+      "([0-9]\\-[0-9]\\-20[0-9][0-9]+)",
+      input_file
+    )
+  # print(paste("      ---> match ", is_match, sep = ""))
+  
+  if (is_match > 0) {
+    # for file name start with end and get until you get first /
+    l <- strsplit(input_file, "/")
+    f <- tail(l[[1]], 1)
+    
+    date <-
+      as.Date(substr(input_file, is_match, is_match + 7), format = "%m-%d-%Y")
+    
+    YYYY <- format(date, "%Y")
+    MM <- format(date, "%b")
+    
+    safe_dir_create(paste(output_dir, YYYY, sep = "/"))
+    safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
+    
+    # move file to destination dir
+    ret <-
+      safe_move(input_file, paste(output_dir, YYYY, MM, f, sep = "/"))
+    
+  }
+  
+  return (ret)
+}
 
 # unused function... remove it later
 # no_matches_move_to_unknown <- function(input_file, unknown_dir) {
@@ -296,6 +444,30 @@ for (i in 1:length(raw_files)) {
   }
   
   ret <- process_file_match_4(raw_files[i], output_dir)
+  
+  if (ret) {
+    next
+  }
+  
+  ret <- process_file_match_5(raw_files[i], output_dir)
+  
+  if (ret) {
+    next
+  }
+  
+  ret <- process_file_match_6(raw_files[i], output_dir)
+  
+  if (ret) {
+    next
+  }
+  
+  ret <- process_file_match_7(raw_files[i], output_dir)
+  
+  if (ret) {
+    next
+  }
+  
+  ret <- process_file_match_8(raw_files[i], output_dir)
   
   if (ret) {
     next
