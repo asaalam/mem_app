@@ -4,7 +4,7 @@
 
 # --- Configuration START
 
-# input_dir <- "/Volumes/Seagate\ Backup\ Plus\ Drive/Memories_DO_NOT_ADD/Unsorted/CompleteBackupSABAandAamir_09272015/Pictures_DONOTADD_BACKEDUP_ON_09272015/"
+# input_dir <- "/Volumes/Seagate\ Backup\ Plus\ Drive/Photos/"
 input_dir <- "/Users/asaalam/Desktop/Baseline2/Code2/github/mem_app/input_dir/" # test dir
 
 # make sure the ending / is not present in the output dir
