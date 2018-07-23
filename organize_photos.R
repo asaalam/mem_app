@@ -100,6 +100,27 @@ safe_move <- function (from, to) {
     return (ret)
   }
   
+  if (!is_from_file_movable & !is_file_exists & !is_file_accessible & !is_file_size_same) {
+    # print(paste("file ", from, " mode = ", file.mode(from), sep = ""))
+    
+    # change permissions
+    # Sys.chmod(from, "777")
+    s <- system(paste("chflags nouchg ", shQuote(from), sep = ""), intern = TRUE)
+    # print(s)
+    
+    is_from_file_movable <- (file.access(from, 2) != -1)
+    
+    # print(paste("file ", from, " mode = ", file.mode(from), ", is_from_file_movable = ", is_from_file_movable, sep = ""))
+    
+    if (is_from_file_movable) {
+      # changed the from file permission to TRUE
+      ret <- file.rename(from, to)
+      
+      return (ret)
+    }
+    
+  }
+  
   print(
     paste(
       "WARNING!!! check this file manually: from",
@@ -582,11 +603,11 @@ for (i in 1:length(raw_files)) {
     next
   }
   
-  ret <- process_file_ctime(raw_files[i], output_dir)
+  # ret <- process_file_ctime(raw_files[i], output_dir)
   
-  if (ret) {
-    next
-  }
+  # if (ret) {
+  #   next
+  # }
   
   print(paste("No pattern match for file [", raw_files[i], "]", sep = ""))
   
