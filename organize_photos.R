@@ -1,10 +1,10 @@
 #!/usr/bin/Rscript
 
-# Rscript organize_photos.R >> out
+# Rscript organize_photos.R > out.txt
 
 # --- Configuration START
 
-# input_dir <- "/Volumes/Seagate\ Backup\ Plus\ Drive/Photos/"
+# input_dir <- "/Volumes/Seagate\ Backup\ Plus\ Drive/Photos_TO_BACKUP/f_1/"
 input_dir <- "/Users/asaalam/Desktop/Baseline2/Code2/github/mem_app/input_dir/" # test dir
 
 # make sure the ending / is not present in the output dir
@@ -86,8 +86,24 @@ safe_move <- function (from, to) {
       is_file_exists & is_file_accessible & !is_file_size_same) {
     # file name is same but the file sizes are different
     # further randomizing the dup file name to prevent overwriting
+    
+    ds <- strsplit(to, "\\.")
+    dup_file <- paste(to, "_dup_", sample.int(10000, 1), ".", tail(ds[[1]], 1), sep = "")
+
     ret <-
-      file.rename(from, paste("dup-", sample.int(10000, 1), to, sep = ""))
+      file.copy(from, dup_file)
+    
+    if (ret) {
+      # remove the copied file
+      ret_remove <- file.remove(from)
+      
+      if (! ret_remove) {
+        print(paste("Unable to remove from = ", from, sep = ""))  
+        
+      }
+    } else {
+      print(paste("Unable to copy_1 from = ", from, ", to = ", dup_file, sep = ""))  
+    }
     
     return (ret)
   }
@@ -95,12 +111,23 @@ safe_move <- function (from, to) {
   if (is_from_file_movable &
       !is_file_exists & !is_file_accessible) {
     # file doesn't exist... move to destination
-    ret <- file.rename(from, to)
+    ret <- file.copy(from, to, overwrite = TRUE)
+    
+    if (ret) {
+      # copy successful ... remove
+      ret_remove <- file.remove(from)
+      
+      if (! ret_remove) {
+        print(paste("Unable to remove from = ", from, sep = ""))  
+      }
+    } else {
+      print(paste("Unable to copy_2 from = ", from, ", to = ", to, sep = ""))  
+    }
     
     return (ret)
   }
   
-  if (!is_from_file_movable & !is_file_exists & !is_file_accessible & !is_file_size_same) {
+  if (!is_from_file_movable) {
     # print(paste("file ", from, " mode = ", file.mode(from), sep = ""))
     
     # change permissions
@@ -114,7 +141,18 @@ safe_move <- function (from, to) {
     
     if (is_from_file_movable) {
       # changed the from file permission to TRUE
-      ret <- file.rename(from, to)
+      ret <- file.copy(from, to, overwrite = TRUE)
+      
+      if (ret) {
+        
+        ret_remove <- file.remove(from)
+        
+        if (! ret_remove) {
+          print(paste("Unable to remove from = ", from, sep = ""))  
+        }
+      } else {
+        print(paste("Unable to copy_3 from = ", from, ", to = ", to, sep = ""))  
+      }
       
       return (ret)
     }
