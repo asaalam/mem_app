@@ -87,7 +87,7 @@ safe_move <- function (from, to) {
     # file name is same but the file sizes are different
     # further randomizing the dup file name to prevent overwriting
     ret <-
-      file.rename(from, paste(to, "-dup-", sample.int(10000, 1), sep = ""))
+      file.rename(from, paste("dup-", sample.int(10000, 1), to, sep = ""))
     
     return (ret)
   }
