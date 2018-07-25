@@ -191,7 +191,7 @@ process_file_match_1 <- function(input_file, output_dir) {
       as.Date(substr(input_file, is_match, is_match + 7), format = "%Y%m%d")
     
     YYYY <- format(date, "%Y")
-    MM <- format(date, "%b")
+    MM <- format(date, "%Y-%m-01")
     
     safe_dir_create(paste(output_dir, YYYY, sep = "/"))
     safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
@@ -226,7 +226,7 @@ process_file_match_2 <- function(input_file, output_dir) {
       as.Date(substr(input_file, is_match2 + 4, is_match2 + 11), format = "%Y%m%d")
     
     YYYY <- format(date, "%Y")
-    MM <- format(date, "%b")
+    MM <- format(date, "%Y-%m-01")
     
     safe_dir_create(paste(output_dir, YYYY, sep = "/"))
     safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
@@ -258,7 +258,7 @@ process_file_match_3 <- function(input_file, output_dir) {
     date <- as.Date(s, format = "%d-%b-%Y")
     
     YYYY <- format(date, "%Y")
-    MM <- format(date, "%b")
+    MM <- format(date, "%Y-%m-01")
     
     safe_dir_create(paste(output_dir, YYYY, sep = "/"))
     safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
@@ -291,7 +291,7 @@ process_file_match_4 <- function(input_file, output_dir) {
       as.Date(substr(input_file, is_match, is_match + 7), format = "%Y%m%d")
     
     YYYY <- format(date, "%Y")
-    MM <- format(date, "%b")
+    MM <- format(date, "%Y-%m-01")
     
     safe_dir_create(paste(output_dir, YYYY, sep = "/"))
     safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
@@ -327,7 +327,7 @@ process_file_match_5 <- function(input_file, output_dir) {
       as.Date(substr(input_file, is_match, is_match + 9), format = "%Y_%m_%d")
     
     YYYY <- format(date, "%Y")
-    MM <- format(date, "%b")
+    MM <- format(date, "%Y-%m-01")
     
     safe_dir_create(paste(output_dir, YYYY, sep = "/"))
     safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
@@ -363,7 +363,7 @@ process_file_match_6 <- function(input_file, output_dir) {
       as.Date(substr(input_file, is_match, is_match + 9), format = "%Y-%m-%d")
     
     YYYY <- format(date, "%Y")
-    MM <- format(date, "%b")
+    MM <- format(date, "%Y-%m-01")
     
     safe_dir_create(paste(output_dir, YYYY, sep = "/"))
     safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
@@ -399,7 +399,7 @@ process_file_match_7 <- function(input_file, output_dir) {
       as.Date(substr(input_file, is_match, is_match + 9), format = "%m-%d-%Y")
     
     YYYY <- format(date, "%Y")
-    MM <- format(date, "%b")
+    MM <- format(date, "%Y-%m-01")
     
     safe_dir_create(paste(output_dir, YYYY, sep = "/"))
     safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
@@ -435,7 +435,7 @@ process_file_match_8 <- function(input_file, output_dir) {
       as.Date(substr(input_file, is_match, is_match + 7), format = "%m-%d-%Y")
     
     YYYY <- format(date, "%Y")
-    MM <- format(date, "%b")
+    MM <- format(date, "%Y-%m-01")
     
     safe_dir_create(paste(output_dir, YYYY, sep = "/"))
     safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
@@ -471,7 +471,7 @@ process_file_match_9 <- function(input_file, output_dir) {
       as.Date(substr(input_file, is_match, is_match + 8), format = "%m-%d-%Y")
     
     YYYY <- format(date, "%Y")
-    MM <- format(date, "%b")
+    MM <- format(date, "%Y-%m-01")
     
     safe_dir_create(paste(output_dir, YYYY, sep = "/"))
     safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
@@ -507,7 +507,7 @@ process_file_match_10 <- function(input_file, output_dir) {
       as.Date(substr(input_file, is_match, is_match + 8), format = "%m-%d-%Y")
     
     YYYY <- format(date, "%Y")
-    MM <- format(date, "%b")
+    MM <- format(date, "%Y-%m-01")
     
     safe_dir_create(paste(output_dir, YYYY, sep = "/"))
     safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
@@ -537,8 +537,8 @@ process_file_ctime <- function(input_file, output_dir) {
   date <- as.Date(ctime, format = "%m-%d-%Y")
     
   YYYY <- format(date, "%Y")
-  MM <- format(date, "%b")
-    
+  MM <- format(date, "%Y-%m-01")
+  
   safe_dir_create(paste(output_dir, YYYY, sep = "/"))
   safe_dir_create(paste(output_dir, YYYY, MM, sep = "/"))
 
